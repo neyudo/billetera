@@ -3,44 +3,49 @@ const matchList = document.getElementById('match-list')
 
 
 //JSON online en la web
-const api_url = 'https://api.pancakeswap.info/api/v2/tokens'
+const api_url = 'https://tokens.pancakeswap.finance/pancakeswap-extended.json'
 const buscadatos = async  precios => {
-    const response = await fetch('https://api.pancakeswap.info/api/v2/tokens');
-
-
-
+    const response = await fetch(api_url);
     const datos = await response.json();
     var resul = [];
-    resul.push(Object.values(datos.data));
+    resul.push(Object.values(datos.tokens));
 
     let matches = resul[0].filter(dato =>{
         const regex = new RegExp(`^${precios}`, 'gi');
         return dato.symbol.match(regex) /*|| dato.price.match(regex)*/;
+
     });
-    if(precios.length === 0 )
-    {
-        matches = [];
-        matchList.innerHTML = '';
-    }
-    outputHtml(matches);
-};
+    console.log(matches);
 
-// Show results in html
-const outputHtml = matches => 
-{
-    if (matches.length > 0) 
+    // creo una constante que me da los Match
+    const piru = matches.map(match => `
+    ${match.address}`);
+    console.log(piru);
+    //funcion en la que encadeno los match con la api 
+    function coincidir() 
     {
-        const html = matches.map(match => `
-            <div class="card card-body mb-1">
-              <h4>${match.symbol} <span class="text-primary">${match.price}</span> </h4>
-            </div>
+        for (let index = 0; index < piru.length; index++) {
+            const element = piru[index];
+            var url = "https://api.pancakeswap.info/api/v2/tokens" + "/" + piru[index];
+            url = url.replace(/(\r\n|\n|\r|"| )/gm, "");
+            console.log(url);
+
+            async function cargarCripto() 
+            {
+                const rep = await fetch(url);
+                const datitos = await rep.json();
+                console.log(datitos.data);
+
+            }
+            cargarCripto()
+
+        }
         
-        `)
-        .join('');
-    matchList.innerHTML = html;   
+        
     }
+    coincidir()
 
-
+    
 };
 
 
