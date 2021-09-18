@@ -7,10 +7,12 @@ const api_url = 'https://tokens.pancakeswap.finance/pancakeswap-extended.json'
 const buscadatos = async  precios => {
     const response = await fetch(api_url);
     const datos = await response.json();
+    /*
     var resul = [];
     resul.push(Object.values(datos.tokens));
-
-    let matches = resul[0].filter(dato =>{
+    console.log(datos);
+    */
+    let matches = datos.tokens.filter(dato =>{
         const regex = new RegExp(`^${precios}`, 'gi');
         return dato.symbol.match(regex) /*|| dato.price.match(regex)*/;
 
@@ -26,7 +28,7 @@ const buscadatos = async  precios => {
     {
         for (let index = 0; index < piru.length; index++) {
             const element = piru[index];
-            var url = "https://api.pancakeswap.info/api/v2/tokens" + "/" + piru[index];
+            var url = "https://api.pancakeswap.info/api/v2/tokens" + "/" + element;
             url = url.replace(/(\r\n|\n|\r|"| )/gm, "");
             console.log(url);
 
@@ -47,6 +49,5 @@ const buscadatos = async  precios => {
 
     
 };
-
 
 search.addEventListener('input', () => buscadatos(search.value));
